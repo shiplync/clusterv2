@@ -1,0 +1,9 @@
+namespace sandbox
+notificationEmail 'tech@traansmission.com'
+host 'http://sandbox.traansmission.com'
+portalUrl 'http://sandboxportal.traansmission.com/#/'
+s3BucketPrefix 'traansmission-sandbox'
+postgresDb 'traansmissionsandboxdb'
+backendWebDeploymentMemory 1024Mi
+postgresDeploymentMemory 1024Mi
+dbDiskName postgres-disk-sandbox

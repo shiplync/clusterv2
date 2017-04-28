@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog-mysql-service
+  labels:
+    app: blog
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: blog
+    component: blog-mysql-deployment
+  type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: blog-mysql-deployment
+  labels:
+    app: blog
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: blog
+        component: blog-mysql-deployment
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:5.6.31
+          args:
+            - "--ignore-db-dir"
+            - "lost+found"
+          env:
+            - name: MYSQL_DATABASE
+              value: blogdb
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: blog-secret-vars
+                  key: blog-db-password
+            - name: MYSQL_USER
+              valueFrom: 
+                secretKeyRef:
+                  name: blog-secret-vars
+                  key: blog-db-username
+            - name: MYSQL_PASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: blog-secret-vars
+                  key: blog-db-password
+          ports:
+            - containerPort: 3306
+          resources:
+            limits:
+              cpu: 50m
+              memory: 1024Mi
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-data
+      volumes:
+        - name: mysql-data
+          gcePersistentDisk:
+            pdName: blog-mysql-disk
+            fsType: ext4

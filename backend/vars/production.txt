@@ -1,0 +1,9 @@
+namespace production
+notificationEmail 'notifications@traansmission.com'
+host 'http://api.traansmission.com'
+portalUrl 'http://portal.traansmission.com/#/'
+s3BucketPrefix 'traansmission-production'
+postgresDb 'traansmissionproductiondb'
+backendWebDeploymentMemory 1024Mi
+postgresDeploymentMemory 1024Mi
+dbDiskName postgres-disk-production

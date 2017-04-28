@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: blog
+  name: blog-web-service
+spec:
+  ports:
+  - port: 80
+    targetPort: 8081
+  selector:
+    app: blog
+    component: web-server
+  type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: blog
+  name: blog-web-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: blog
+        component: web-server
+    spec:
+      containers:
+      - name: blog
+        image: gcr.io/ieisite-163707/blog:v12 #vX.Y.Z  - Make sure to specify the right image version here in DEPLOY file!
+        ports:
+        - containerPort: 8081
+        env: 
+        - name: DB_NAME
+          value: blogdb
+        - name: DB_PORT
+          value: '3306'
+        - name: NODE_ENV
+          value: production
+        - name: PORT
+          value: '8081'
+        - name: URL
+          value: http://blog.traansmission.com
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: blog-secret-vars
+              key: blog-db-password
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: blog-secret-vars
+              key: blog-db-username
+        - name: EMAIL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: blog-secret-vars
+              key: blog-email-username
+        - name: EMAIL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: blog-secret-vars
+              key: blog-email-password
+        resources:
+          limits:
+            cpu: 50m
+            memory: 128Mi

@@ -1,0 +1,9 @@
+namespace demo
+notificationEmail 'notifications@traansmission.com'
+host 'http://demo.traansmission.com'
+portalUrl 'http://demoportal.traansmission.com/#/'
+s3BucketPrefix 'traansmission-demo'
+postgresDb 'traansmissiondemodb'
+backendWebDeploymentMemory 1024Mi
+postgresDeploymentMemory 1024Mi
+dbDiskName postgres-disk-demo
